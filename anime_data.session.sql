@@ -1,2 +1,1 @@
-ALTER TABLE anime_data
-RENAME COLUMN synopsis TO summary;
+SELECT * FROM anime_data;
