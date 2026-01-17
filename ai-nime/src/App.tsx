@@ -4,7 +4,7 @@ import SearchBarComponent from './lib/Searchbar.tsx'
 import type { AnimeData } from '../definitions/animeDataTypes.ts';
 import {getAnimeData} from './lib/data/searchBarQuery.ts'
 import {LimitBtn, PageBtns} from './lib/Buttons.tsx'
-
+import FilterGenres from './Filters.tsx';
 import { FullCardList } from './lib/PerCard.tsx';
 function App() {
     const [totalAnimeCount, setTotalAnimeCount] = useState<number>(0);
@@ -49,6 +49,17 @@ function App() {
             setLimitPerPage={setLimitPerPage}
             />
             </span>
+
+            <FilterGenres 
+            setTotalAnimeCount={setTotalAnimeCount}
+            setAnimeData={setAnimeData}
+            page={pageNum}
+            limit={limitPerPage}
+            genreFilter={genreFilter}
+            typeFilter={typeFilter}
+            setGenreFilter={setGenreFilter}
+            setTypeFilter={setTypeFilter}
+            text={text}/>
         
         
         <FullCardList
