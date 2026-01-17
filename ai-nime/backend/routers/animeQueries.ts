@@ -11,8 +11,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const router = express.Router();
 
 
-router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number}>, res: Response<{success: boolean, animeData: AnimeData[] | null, animeCount: number}>) => {
-    const {query, page, limit} = req.body;
+router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number, genres: string, type: string}>, res: Response<{success: boolean, animeData: AnimeData[] | null, animeCount: number}>) => {
+    // Genres needs to look like: "Adventure,Comedy,Fantasy"
+    
+    const {query, page, limit, genres, type} = req.body;
     if (!page || !limit) {
         return res.status(401).json({success: false, animeData: null, animeCount: 0});
     }
@@ -25,11 +27,15 @@ router.post("/search", async (req: Request<{},{},{query: string, page: number, l
         const animeData = await db.query(
             `
             SELECT * FROM anime_data 
-            WHERE name ILIKE $1 OR english_name ILIKE $1
-            LIMIT $2
-            OFFSET $3
+            WHERE (name ILIKE $1 OR english_name ILIKE $1)
+            AND genres @> ARRAY (
+                SELECT trim(g)
+                FROM unnest(string_to_array($2, ',')) AS g
+            ) AND type = $3
+            LIMIT $4
+            OFFSET $5
             `
-            , [`%${query}%`, limit, offset]
+            , [`%${query}%`, genres, type, limit, offset]
         );
 
         const countResult = await db.query(

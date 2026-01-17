@@ -1,1 +1,3 @@
-SELECT * FROM anime_data WHERE 'Hentai' = ANY(genres);
+SELECT DISTINCT type FROM anime_data;
+-- @block
+SELECT DISTINCT unnest(genres) FROM anime_data;

@@ -16,7 +16,11 @@ export type SearchBarProps = {
     setTotalAnimeCount: React.Dispatch<React.SetStateAction<number>>, 
     setAnimeData: React.Dispatch<React.SetStateAction<AnimeData[]>>
     page: number,
-    limit: number
+    limit: number,
+    genreFilter: string[],
+    typeFilter: string,
+    text: string,
+    setText: React.Dispatch<React.SetStateAction<string>>
 }
 export type LimitBtnProps = {
     limitPerPage: number,
@@ -27,4 +31,16 @@ export type PageBtnsProps = {
     setPageNum: React.Dispatch<React.SetStateAction<number>>
     totalAnimeCount: number,
     limitPerPage:number
+}
+export type FilterGenresProps = {
+    setTotalAnimeCount: React.Dispatch<React.SetStateAction<number>>, 
+    setAnimeData: React.Dispatch<React.SetStateAction<AnimeData[]>>
+    page: number,
+    limit: number,
+    genreFilter: string[],
+    typeFilter: string,
+    setGenreFilter: React.Dispatch<React.SetStateAction<string[]>>,
+    setTypeFilter: React.Dispatch<React.SetStateAction<string>>,
+    text: string
+
 }
