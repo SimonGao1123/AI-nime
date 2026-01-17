@@ -5,17 +5,11 @@ import {getAnimeData} from './data/searchBarQuery';
 
 function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData} : SearchBarProps) {
     const [text, setText] = useState<string>("");
-    // const [searched, setSearched] = useState("");
-    
-    /*
-    function handleSearch(){
-        setSearched(text);
-    }
-    */
 
   return (
     <div className={styles.searchBar}>
       <input 
+      className={styles.input}
       type="text" 
       placeholder="Search..." 
       value={text}
@@ -24,7 +18,6 @@ function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData} : Se
         getAnimeData(text, page, limit, setTotalAnimeCount, setAnimeData);
       }}
       />
-        <button>Search</button>
     </div>
   );
 }
