@@ -18,3 +18,13 @@ export type SearchBarProps = {
     page: number,
     limit: number
 }
+export type LimitBtnProps = {
+    limitPerPage: number,
+    setLimitPerPage: React.Dispatch<React.SetStateAction<number>>
+}
+export type PageBtnsProps = {
+    pageNum: number,
+    setPageNum: React.Dispatch<React.SetStateAction<number>>
+    totalAnimeCount: number,
+    limitPerPage:number
+}

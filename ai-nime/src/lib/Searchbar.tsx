@@ -5,6 +5,7 @@ import {getAnimeData} from './data/searchBarQuery';
 
 function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData} : SearchBarProps) {
     const [text, setText] = useState<string>("");
+    
 
   return (
     <div className={styles.searchBar}>
