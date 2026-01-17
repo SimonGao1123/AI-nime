@@ -13,7 +13,7 @@ type Anime = {
 export function PerCardComponent({name, imageUrl, english_name}: Anime) {
   return (
     <div className={styles.PerCard}>
-        <img src={imageUrl} alt={name} className={styles.image} />
+        <img src={imageUrl} alt={name} className={styles.image} loading="lazy"/>
         <h3 className={styles.name}>{name}</h3>
         <h3 className={styles.name}>{english_name}</h3>
     </div>

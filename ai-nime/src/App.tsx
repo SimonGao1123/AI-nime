@@ -29,6 +29,7 @@ function App() {
                 limit={limitPerPage}
             />
 
+            <span style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
             <PageBtns
             pageNum={pageNum}
             setPageNum={setPageNum}
@@ -39,12 +40,14 @@ function App() {
             limitPerPage={limitPerPage}
             setLimitPerPage={setLimitPerPage}
             />
+            </span>
         
         
         <FullCardList
         animeData={animeData}/>
-        </>
         </main>
+    
+        
 
     );
 }
