@@ -11,3 +11,10 @@ export type AnimeData = {
     image_url: string,
 
 }
+
+export type SearchBarProps = {
+    setTotalAnimeCount: React.Dispatch<React.SetStateAction<number>>, 
+    setAnimeData: React.Dispatch<React.SetStateAction<AnimeData[]>>
+    page: number,
+    limit: number
+}

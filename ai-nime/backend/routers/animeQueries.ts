@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number}>, res: Response<{success: boolean, animeData: AnimeData[] | null, animeCount: number}>) => {
     const {query, page, limit} = req.body;
-    if (!query || !page || !limit) {
+    if (!page || !limit) {
         return res.status(401).json({success: false, animeData: null, animeCount: 0});
     }
     // normal search (title)
