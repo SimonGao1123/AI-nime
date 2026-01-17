@@ -13,9 +13,13 @@ function App() {
     const [pageNum, setPageNum] = useState<number>(1);
     const [limitPerPage, setLimitPerPage] = useState<number>(20);
     
+    const [genreFilter, setGenreFilter] = useState<string[]>([]);
+    const [typeFilter, setTypeFilter] = useState<string>("");
+
+    const [text, setText] = useState<string>("");
     useEffect(
         () => {
-            getAnimeData("", pageNum, limitPerPage, setTotalAnimeCount, setAnimeData);
+            getAnimeData("", pageNum, limitPerPage, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
         }, [limitPerPage, pageNum]    
     );
 
@@ -27,6 +31,10 @@ function App() {
                 setAnimeData={setAnimeData}
                 page={pageNum}
                 limit={limitPerPage}
+                genreFilter={genreFilter}
+                typeFilter={typeFilter}
+                text={text}
+                setText={setText}
             />
 
             <span style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>

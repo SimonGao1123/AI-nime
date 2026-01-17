@@ -3,8 +3,7 @@ import styles from "./Searchbar.module.css";
 import type { SearchBarProps } from "../../definitions/animeDataTypes";
 import {getAnimeData} from './data/searchBarQuery';
 
-function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData} : SearchBarProps) {
-    const [text, setText] = useState<string>("");
+function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter, text, setText} : SearchBarProps) {
     
 
   return (
@@ -16,7 +15,7 @@ function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData} : Se
       value={text}
       onChange={(e) => {
         setText(e.target.value)
-        getAnimeData(text, page, limit, setTotalAnimeCount, setAnimeData);
+        getAnimeData(text, page, limit, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
       }}
       />
     </div>
