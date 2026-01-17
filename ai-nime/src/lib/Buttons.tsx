@@ -49,7 +49,7 @@ function Pagination ({pageNum, setPageNum, totalNumberPages} : {pageNum: number,
             continue; // skip button
         }
         pageButtons.push(
-            <button className={i !== pageNum ? style.pageBtn : `${style.pageBtn} ${style.activeBtn}`} onClick={() => setPageNum(i)}>
+            <button key={i} className={i !== pageNum ? style.pageBtn : `${style.pageBtn} ${style.activeBtn}`} onClick={() => setPageNum(i)}>
                 {i}
             </button>
         );

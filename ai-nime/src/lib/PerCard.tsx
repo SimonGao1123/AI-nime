@@ -25,6 +25,7 @@ export function FullCardList({animeData}: {animeData: AnimeData[]}) {
         <div className={styles.cardList}>
             {animeData.map((each_anime: AnimeData) => (
                 <PerCardComponent 
+                    key={each_anime.anime_id}
                     english_name={each_anime.english_name}
                     name={each_anime.name}
                     imageUrl={each_anime.image_url}

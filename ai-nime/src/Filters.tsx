@@ -42,7 +42,7 @@ export default function FilterGenres ({setTotalAnimeCount, setAnimeData, page, l
 
     for (let i = 0; i < allGenres.length; i++) {
         filterBtns.push(
-            <div>
+            <div key={`genre-filter-${i}`}>
                 <label htmlFor={`filter-btns-${i}`}>{allGenres[i]}</label>
                 <input id={`filter-btns-${i}`} 
                 name="genres-filter" 
@@ -65,7 +65,7 @@ export default function FilterGenres ({setTotalAnimeCount, setAnimeData, page, l
     const typeBtns = [];
     for (let i = 0; i < allTypes.length; i++) {
         typeBtns.push(
-            <div>
+            <div key={`type-filter-${i}`}>
                 <label htmlFor={`filter-type-btns-${i}`}>{allTypes[i]}</label>
                 <input id={`filter-type-btns-${i}`} 
                 name="types-filter" 

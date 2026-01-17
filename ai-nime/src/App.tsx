@@ -19,7 +19,7 @@ function App() {
     const [text, setText] = useState<string>("");
     useEffect(
         () => {
-            getAnimeData("", pageNum, limitPerPage, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
+            getAnimeData(text, pageNum, limitPerPage, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
         }, [limitPerPage, pageNum]    
     );
 
@@ -62,8 +62,8 @@ function App() {
             text={text}/>
         
         
-        <FullCardList
-        animeData={animeData}/>
+            <FullCardList
+            animeData={animeData}/>
         </main>
     
         
