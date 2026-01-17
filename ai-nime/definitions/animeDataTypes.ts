@@ -8,5 +8,6 @@ export type AnimeData = {
     premiered: string,
     studios: string,
     duration: string,
-    image_url: string
+    image_url: string,
+
 }
