@@ -10,6 +10,7 @@ function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData} : Se
   return (
     <div className={styles.searchBar}>
       <input 
+      className={styles.input}
       type="text" 
       placeholder="Search..." 
       value={text}
@@ -18,7 +19,6 @@ function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData} : Se
         getAnimeData(text, page, limit, setTotalAnimeCount, setAnimeData);
       }}
       />
-        <button>Search</button>
     </div>
   );
 }
