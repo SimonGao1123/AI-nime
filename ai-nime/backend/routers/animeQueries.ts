@@ -11,10 +11,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const router = express.Router();
 
 
-router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number}>, res: Response<{success: boolean, animeData: AnimeData[] | null}>) => {
+router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number}>, res: Response<{success: boolean, animeData: AnimeData[] | null, animeCount: number}>) => {
     const {query, page, limit} = req.body;
     if (!query || !page || !limit) {
-        return res.status(401).json({success: false, animeData: null});
+        return res.status(401).json({success: false, animeData: null, animeCount: 0});
     }
     // normal search (title)
     const pageNum = Math.max(Number(page) || 1, 1); // min on page #1
@@ -32,10 +32,20 @@ router.post("/search", async (req: Request<{},{},{query: string, page: number, l
             , [`%${query}%`, limit, offset]
         );
 
-        return res.status(200).json({success: true, animeData: animeData.rows});        
+        const countResult = await db.query(
+            `
+            SELECT COUNT(*) 
+            FROM anime_data
+            WHERE name ILIKE $1 OR english_name ILIKE $1
+            `,
+            [`%${query}%`]
+        );
+
+        const totalCount = Number(countResult.rows[0].count);
+        return res.status(200).json({success: true, animeData: animeData.rows, animeCount: totalCount});        
     } catch (err) {
         console.log(err);
-        return res.status(500).json({success: false, animeData: null});
+        return res.status(500).json({success: false, animeData: null, animeCount: 0});
     }
 });
 
