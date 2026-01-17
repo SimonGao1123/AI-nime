@@ -5,6 +5,7 @@ import type { AnimeData } from '../definitions/animeDataTypes.ts';
 import {getAnimeData} from './lib/data/searchBarQuery.ts'
 import {LimitBtn, PageBtns} from './lib/Buttons.tsx'
 
+import { FullCardList } from './lib/PerCard.tsx';
 function App() {
     const [totalAnimeCount, setTotalAnimeCount] = useState<number>(0);
     const [animeData, setAnimeData] = useState<AnimeData[]>([]);
@@ -36,6 +37,7 @@ function App() {
                 setText={setText}
             />
 
+            <span style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
             <PageBtns
             pageNum={pageNum}
             setPageNum={setPageNum}
@@ -46,7 +48,14 @@ function App() {
             limitPerPage={limitPerPage}
             setLimitPerPage={setLimitPerPage}
             />
+            </span>
+        
+        
+        <FullCardList
+        animeData={animeData}/>
         </main>
+    
+        
 
     );
 }

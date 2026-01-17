@@ -8,7 +8,7 @@ export function LimitBtn ({limitPerPage, setLimitPerPage} : LimitBtnProps) {
         <select 
         value={limitPerPage} 
         onChange={(e) => setLimitPerPage(Number(e.target.value))}
-        className={style.limitSelect}
+        className={`${style.limitSelect} ${style.pageBtn}`}
         >
             <option>5</option>
             <option>10</option>
@@ -41,9 +41,7 @@ export function PageBtns ({pageNum, setPageNum, totalAnimeCount, limitPerPage}: 
         </>
     );
 }
-function Pagination ({pageNum, setPageNum, totalNumberPages} :
-    {pageNum: number, setPageNum: React.Dispatch<React.SetStateAction<number>>, totalNumberPages: number}
-) {
+function Pagination ({pageNum, setPageNum, totalNumberPages} : {pageNum: number, setPageNum: React.Dispatch<React.SetStateAction<number>>, totalNumberPages: number}) {
     const [manualPageDisplay, setManual] = useState<boolean>(false);
     const pageButtons = [];
     for (let i = pageNum-2; i <= pageNum+2; i++) {
@@ -51,7 +49,7 @@ function Pagination ({pageNum, setPageNum, totalNumberPages} :
             continue; // skip button
         }
         pageButtons.push(
-            <button key={i} className={i !== pageNum ? style.pageBtn : style.activeBtn} onClick={() => setPageNum(i)}>
+            <button className={i !== pageNum ? style.pageBtn : `${style.pageBtn} ${style.activeBtn}`} onClick={() => setPageNum(i)}>
                 {i}
             </button>
         );

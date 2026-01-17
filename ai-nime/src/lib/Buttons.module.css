@@ -1,6 +1,16 @@
 .pageBtn {
-    background-color: lightblue;
+    background-color: rgb(255, 255, 255);
+    outline: none;
+    font-family: 'Cal Sans', sans-serif;
+    border-radius: 15px;;
+    font-size: 18px;
+    padding: 8px 15px;
+    border: 2px solid #830fff;
 }
 .activeBtn {
-    background-color: green;
+    background-color: rgb(241, 120, 250);
+}
+
+.limitSelect{
+    border: 2px solid #830fff;
 }
