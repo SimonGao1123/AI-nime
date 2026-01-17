@@ -11,8 +11,11 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const router = express.Router();
 
 
-router.get("/search/:query/:page/:limit", async (req: Request<{query: string, page: number, limit: number}>, res: Response<{success: boolean, animeData: AnimeData[] | null}>) => {
-    const {query, page, limit} = req.params;
+router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number}>, res: Response<{success: boolean, animeData: AnimeData[] | null}>) => {
+    const {query, page, limit} = req.body;
+    if (!query || !page || !limit) {
+        return res.status(401).json({success: false, animeData: null});
+    }
     // normal search (title)
     const pageNum = Math.max(Number(page) || 1, 1); // min on page #1
     const limitNum = Math.min(Number(limit) || 20, 40); // at most 40 on one page 
@@ -22,7 +25,7 @@ router.get("/search/:query/:page/:limit", async (req: Request<{query: string, pa
         const animeData = await db.query(
             `
             SELECT * FROM anime_data 
-            WHERE name ILIKE $1
+            WHERE name ILIKE $1 OR english_name ILIKE $1
             LIMIT $2
             OFFSET $3
             `
@@ -42,7 +45,7 @@ router.post("/AIsearch", async (req: Request<{},{},{query: string}>, res: Respon
         const model = genAI.getGenerativeModel({model: "gemma-3-4b-it"}); 
         // TODO :edit prompt
         const prompt = `${query}`;
-        
+
         const result = await model.generateContent(prompt);
 
         // TODO: parse then query database and return list of animes

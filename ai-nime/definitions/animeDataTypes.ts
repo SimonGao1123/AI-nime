@@ -6,7 +6,6 @@ export type AnimeData = {
     summary: string,
     type: string,
     premiered: string,
-    status: string,
     studios: string,
     duration: string,
     image_url: string

@@ -1,1 +1,1 @@
-SELECT * FROM anime_data WHERE name ILIKE '%kanojo%';
+SELECT anime_id, genres FROM anime_data WHERE anime_id=1;
