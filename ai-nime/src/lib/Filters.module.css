@@ -1,9 +1,29 @@
+.toggleBtn {
+    display: block;
+    margin: 15px auto;
+    background-color: rgb(255, 255, 255);
+    color: #202225;
+    border: 2px solid #830fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-family: 'Cal Sans', sans-serif;
+    font-weight: 600;
+}
+
+.toggleBtn:hover {
+    background-color: rgb(241, 120, 250);
+    color: #202225;
+}
+
 .filterContainer {
     display: flex;
-    gap: 40px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    padding: 20px;
+    gap: 25px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding: 12px;
     justify-content: center;
     flex-wrap: wrap;
 }
@@ -11,31 +31,31 @@
 .filterSection {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 
 .filterSection h3 {
     font-family: 'Cal Sans', sans-serif;
     color: white;
-    margin: 0 0 10px 0;
-    font-size: 18px;
+    margin: 0 0 6px 0;
+    font-size: 16px;
 }
 
 .filterGroup {
     display: flex;
-    gap: 15px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
 .filterItem {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
 }
 
 .filterItem input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
     accent-color: #830fff;
 }
@@ -44,7 +64,7 @@
     font-family: 'Cal Sans', sans-serif;
     color: white;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .filterItem input[type="checkbox"]:hover {

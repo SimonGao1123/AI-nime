@@ -3,7 +3,7 @@ export type AnimeData = {
     name: string,
     english_name: string,
     genres: string[],
-    summary: string,
+    synopsis: string,
     type: string,
     premiered: string,
     studios: string,

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { FilterGenresProps } from "../../definitions/animeDataTypes";
 import style from './Filters.module.css';
 
@@ -34,6 +35,8 @@ const allTypes = [
   "OVA"
 ];
 export default function FilterGenres ({setTotalAnimeCount, setAnimeData, page, limit, genreFilter, typeFilter, setGenreFilter, setTypeFilter, text}: FilterGenresProps) {
+    const [showFilters, setShowFilters] = useState(false);
+    
     // filter genres / types
     const filterBtns = [];
 
@@ -82,20 +85,27 @@ export default function FilterGenres ({setTotalAnimeCount, setAnimeData, page, l
     }
 
     return (
-        <div className={style.filterContainer}>
-            <div className={style.filterSection}>
-                <h3>Filter Genres</h3>
-                <div className={style.filterGroup}>
-                    {filterBtns}
-                </div>
-            </div>
+        <>
+            <button className={style.toggleBtn} onClick={() => setShowFilters(!showFilters)}>
+                {showFilters ? "Hide Filters ▲" : "Show Filters ▼"}
+            </button>
+            {showFilters && (
+                <div className={style.filterContainer}>
+                    <div className={style.filterSection}>
+                        <h3>Filter Genres</h3>
+                        <div className={style.filterGroup}>
+                            {filterBtns}
+                        </div>
+                    </div>
 
-            <div className={style.filterSection}>
-                <h3>Filter Types</h3>
-                <div className={style.filterGroup}>
-                    {typeBtns}
+                    <div className={style.filterSection}>
+                        <h3>Filter Types</h3>
+                        <div className={style.filterGroup}>
+                            {typeBtns}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            )}
+        </>
     );
 }

@@ -4,6 +4,8 @@ import style from "./animeDetails.module.css";
 export default function AnimeDetails ({selectedAnime, setSelectedAnime} : AnimeDetailsProps) {
     
     const genreString = selectedAnime?.genres.join(", ");
+    
+    
     return (
         <div className={style.detail_container}>
             <button onClick={() => setSelectedAnime(null)}className={style.escape}>←</button>
@@ -16,7 +18,7 @@ export default function AnimeDetails ({selectedAnime, setSelectedAnime} : AnimeD
             </div>
             <div className={style.right_column}>
                 <p className={style.summary}>
-                    {selectedAnime?.summary}
+                    {selectedAnime?.synopsis || "No summary available"}
                 </p>
 
                 <p>Premiered on: {selectedAnime?.premiered}</p>
