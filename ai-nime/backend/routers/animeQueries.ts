@@ -11,8 +11,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const router = express.Router();
 
 
-router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number}>, res: Response<{success: boolean, animeData: AnimeData[] | null, animeCount: number}>) => {
-    const {query, page, limit} = req.body;
+router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number, genres: string, type: string}>, res: Response<{success: boolean, animeData: AnimeData[] | null, animeCount: number}>) => {
+    // Genres needs to look like: "Adventure,Comedy,Fantasy"
+    
+    const {query, page, limit, genres, type} = req.body;
     if (!page || !limit) {
         return res.status(401).json({success: false, animeData: null, animeCount: 0});
     }
@@ -25,20 +27,33 @@ router.post("/search", async (req: Request<{},{},{query: string, page: number, l
         const animeData = await db.query(
             `
             SELECT * FROM anime_data 
-            WHERE name ILIKE $1 OR english_name ILIKE $1
-            LIMIT $2
-            OFFSET $3
+            WHERE (name ILIKE $1 OR english_name ILIKE $1)
+            AND genres @> ARRAY (
+                SELECT trim(g)
+                FROM unnest(string_to_array($2, ',')) AS g
+            ) AND (NOT EXISTS (
+                SELECT 1 FROM anime_data WHERE type=$5 
+            ) OR type=$5) 
+            LIMIT $3
+            OFFSET $4
             `
-            , [`%${query}%`, limit, offset]
+            , [`%${query}%`, genres, limit, offset, type]
         );
 
         const countResult = await db.query(
             `
             SELECT COUNT(*) 
             FROM anime_data
-            WHERE name ILIKE $1 OR english_name ILIKE $1
+            WHERE (name ILIKE $1 OR english_name ILIKE $1)
+            AND genres @> ARRAY (
+                SELECT trim(g)
+                FROM unnest(string_to_array($2, ',')) AS g
+            ) AND (NOT EXISTS (
+                SELECT 1 FROM anime_data WHERE type=$3 
+            ) OR type=$3) 
+
             `,
-            [`%${query}%`]
+            [`%${query}%`, genres, type]
         );
 
         const totalCount = Number(countResult.rows[0].count);
@@ -49,23 +64,100 @@ router.post("/search", async (req: Request<{},{},{query: string, page: number, l
     }
 });
 
-router.post("/AIsearch", async (req: Request<{},{},{query: string}>, res: Response<any>) => {
-    const {query} = req.body;
+router.post("/AIsearch", async (req: Request<{},{},{query: string, page: number, limit: number}>, res: Response<any>) => {
+    const {query, page, limit} = req.body;
     try {
-        const model = genAI.getGenerativeModel({model: "gemma-3-4b-it"}); 
-        // TODO :edit prompt
-        const prompt = `${query}`;
+        // Get all anime IDs and names from the database
+        const animeList = await db.query(
+            `SELECT anime_id, name FROM anime_data ORDER BY name`
+        );
 
-        const result = await model.generateContent(prompt);
+        // Create array of anime objects
+        const animeDict = animeList.rows;
 
-        // TODO: parse then query database and return list of animes
-        const text = result.response.text();
+        // Create a map for quick title lookup (case-insensitive)
+        const titleToIdMap = new Map(
+            animeDict.map(anime => [anime.name.toLowerCase(), anime.anime_id])
+        );
 
-        return res.status(201).json({test: text});
+        const model = genAI.getGenerativeModel({model: "gemini-2.5-flash"});
+
+        const prompt = `Based on the user's query, recommend 5 anime titles that best match the description. 
+        Use the official titles as listed on MyAnimeList.
+        Return ONLY a JSON array of the 5 titles as strings. Do not include any other text.
+        Example format: \`\`\`json["Cowboy Bebop", "Samurai Champloo", "Steins;Gate", "Death Note", "Attack on Titan"]\`\`\`
+        
+        User query: ${query}`;
+        
+        let validatedIds: number[] = [];
+        let attempts = 0;
+        const maxAttempts = 5;
+
+        // Try to get 10 valid IDs by making multiple requests
+        while (validatedIds.length < 10 && attempts < maxAttempts) {
+            attempts++;
+            
+            const result = await model.generateContent(prompt);
+            const text = result.response.text();
+            
+            try {
+                const cleanText = text.replace(/```json\n?|\n?```/g, '').trim();
+                const parsedTitles = JSON.parse(cleanText);
+
+                // validate that we got an array of strings
+                if (Array.isArray(parsedTitles) && parsedTitles.every(t => typeof t === 'string')) {
+                    // find IDs for titles that exist in our database
+                    const newIds = parsedTitles
+                        .map(title => titleToIdMap.get(title.toLowerCase()))
+                        .filter(id => id !== undefined && !validatedIds.includes(id)) as number[];
+                    
+                    const matchedTitles = parsedTitles.filter(title => 
+                    titleToIdMap.has(title.toLowerCase()) && 
+                    !validatedIds.includes(titleToIdMap.get(title.toLowerCase())!)
+                    );
+                    console.log(`Matched titles:`, matchedTitles);
+                    // add new valid IDs to our list
+                    validatedIds.push(...newIds);
+                    
+                    console.log(`Found ${newIds.length} valid titles. Total so far: ${validatedIds.length}`);
+                }
+
+                
+
+            } catch (parseError) {
+                console.log(`Attempt ${attempts}: Could not parse AI response`, text);
+            }
+        }
+
+
+
+        // If we got at least some valid IDs, return them 
+        if (validatedIds.length > 0) {
+            const pageNum = Math.max(Number(page) || 1, 1);
+            const limitNum = Math.min(Number(limit) || 20, 40);
+            const offset = (pageNum-1)*limitNum;
+            const retrivedData = await db.query(
+                `SELECT * FROM anime_data WHERE anime_id=ANY($1::int[])
+                 LIMIT $2 OFFSET $3`,
+                [validatedIds, limitNum, offset]
+            );
+            
+            return res.status(201).json({
+                success: true,
+                animeData: retrivedData.rows, 
+                animeCount: validatedIds.length
+            });
+        } else {
+            return res.status(500).json({
+                success: false,
+                message: "AI found no valid anime titles in database",
+                
+            });
+        }
 
     } catch (err) {
         console.log(err);
-        return res.status(500).json({success: false, animeData: null});
+        return res.status(500).json({success: false, message: "internal server error"});
     }
     
 });

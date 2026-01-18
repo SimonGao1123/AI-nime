@@ -1,0 +1,129 @@
+.detail_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #202225;
+  border-radius: 8px;
+  position: relative;
+}
+
+.escape {
+  position: absolute;
+  top: -2.5rem;
+  left: 0;
+  background-color: #404249;
+  color: rgb(255, 255, 255);
+  border: 2px solid #404249;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-family: 'Cal Sans', sans-serif;
+  font-weight: bold;
+}
+
+.escape:hover {
+  background-color: #505560;
+  color: rgb(255, 255, 255);
+}
+
+.left_column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.image {
+  width: 100%;
+  max-width: 400px;
+  max-height: 500px;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  object-fit: cover;
+}
+
+.name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: rgb(255, 255, 255);
+  margin: 0;
+  text-align: center;
+  font-family: 'Cal Sans', sans-serif;
+}
+
+.eng_name {
+  font-size: 1rem;
+  color: rgb(200, 200, 200);
+  margin: 0;
+  text-align: center;
+  font-style: italic;
+  font-family: 'Cal Sans', sans-serif;
+}
+
+.genres {
+  padding: 0.75rem 1rem;
+  background: rgba(131, 15, 255, 0.15);
+  border-radius: 6px;
+  border-left: 3px solid #830fff;
+  font-size: 0.9rem;
+  color: rgb(255, 255, 255);
+  font-family: 'Cal Sans', sans-serif;
+}
+
+.type {
+  padding: 0.75rem 1rem;
+  background: rgba(131, 15, 255, 0.15);
+  border-radius: 6px;
+  border-left: 3px solid #830fff;
+  font-size: 0.9rem;
+  color: rgb(255, 255, 255);
+  font-family: 'Cal Sans', sans-serif;
+}
+
+.right_column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.summary {
+  padding: 1.5rem;
+  background: rgba(131, 15, 255, 0.15);
+  border-radius: 6px;
+  border-left: 3px solid #830fff;
+  line-height: 1.8;
+  color: rgb(255, 255, 255);
+  font-size: 1.1rem;
+  margin: 0;
+  font-family: 'Cal Sans', sans-serif;
+}
+
+.right_column > p {
+  padding: 1rem 1.5rem;
+  background: rgba(131, 15, 255, 0.15);
+  border-radius: 6px;
+  border-left: 3px solid #830fff;
+  color: rgb(255, 255, 255);
+  margin: 0;
+  font-size: 1.1rem;
+  font-family: 'Cal Sans', sans-serif;
+  line-height: 1.8;
+}
+
+@media (max-width: 768px) {
+  .detail_container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem;
+  }
+
+  .name {
+    font-size: 1.3rem;
+  }
+}
