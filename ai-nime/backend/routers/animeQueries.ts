@@ -91,7 +91,7 @@ router.post("/AIsearch", async (req: Request<{},{},{query: string, page: number,
         
         let validatedIds: number[] = [];
         let attempts = 0;
-        const maxAttempts = 5;
+        const maxAttempts = 3;
 
         // Try to get 10 valid IDs by making multiple requests
         while (validatedIds.length < 10 && attempts < maxAttempts) {
