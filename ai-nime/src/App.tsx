@@ -7,7 +7,10 @@ import {LimitBtn, PageBtns} from './lib/Buttons.tsx'
 import FilterGenres from './lib/Filters.tsx';
 import { FullCardList } from './lib/PerCard.tsx';
 import AnimeDetails from './lib/animeDetails.tsx';
+import SearchBarAI from './lib/SearchBarAI.tsx';
 function App() {
+    const [promptAI, setPromptAI] = useState<boolean>(false);
+
     const [totalAnimeCount, setTotalAnimeCount] = useState<number>(0);
     const [animeData, setAnimeData] = useState<AnimeData[]>([]);
     
@@ -33,6 +36,9 @@ function App() {
             
             { !selectedAnime ? 
             <>
+            
+            {
+            !promptAI?
             <SearchBarComponent 
                 setTotalAnimeCount={setTotalAnimeCount}
                 setAnimeData={setAnimeData}
@@ -43,6 +49,18 @@ function App() {
                 text={text}
                 setText={setText}
             />
+            : 
+            <SearchBarAI
+            text={text}
+            setText={setText}
+            page={pageNum}
+            limit={limitPerPage}
+            setAnimeData={setAnimeData}
+            setTotalAnimeCount={setTotalAnimeCount}
+            />
+            }   
+            <button className={style.AI_btn} onClick={() => setPromptAI(!promptAI)}>
+                {!promptAI ? "AI Search" : "Normal Search"}</button>
 
             <span style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
             <PageBtns
@@ -56,7 +74,9 @@ function App() {
             setLimitPerPage={setLimitPerPage}
             />
             </span>
-
+            
+            {
+            promptAI ? <></> :
             <FilterGenres 
             setTotalAnimeCount={setTotalAnimeCount}
             setAnimeData={setAnimeData}
@@ -67,6 +87,7 @@ function App() {
             setGenreFilter={setGenreFilter}
             setTypeFilter={setTypeFilter}
             text={text}/>
+            }
         
         
             <FullCardList

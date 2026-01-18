@@ -15,9 +15,9 @@ function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData, genr
       value={text}
       onChange={(e) => {
         setText(e.target.value)
-        getAnimeData(e.target.value, page, limit, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
       }}
       />
+      <button onClick={() => getAnimeData(text, page, limit, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter)}>Search</button>
     </div>
   );
 }

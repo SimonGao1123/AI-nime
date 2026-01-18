@@ -100,17 +100,13 @@ router.post("/AIsearch", async (req: Request<{},{},{query: string, page: number,
             const result = await model.generateContent(prompt);
             const text = result.response.text();
             
-            // Add this line to see the AI's raw response
-            console.log(`Attempt ${attempts} - AI Response:`, text);
-
             try {
-                // Try to parse the response
                 const cleanText = text.replace(/```json\n?|\n?```/g, '').trim();
                 const parsedTitles = JSON.parse(cleanText);
 
-                // Validate that we got an array of strings
+                // validate that we got an array of strings
                 if (Array.isArray(parsedTitles) && parsedTitles.every(t => typeof t === 'string')) {
-                    // Find IDs for titles that exist in our database
+                    // find IDs for titles that exist in our database
                     const newIds = parsedTitles
                         .map(title => titleToIdMap.get(title.toLowerCase()))
                         .filter(id => id !== undefined && !validatedIds.includes(id)) as number[];
@@ -120,7 +116,7 @@ router.post("/AIsearch", async (req: Request<{},{},{query: string, page: number,
                     !validatedIds.includes(titleToIdMap.get(title.toLowerCase())!)
                     );
                     console.log(`Matched titles:`, matchedTitles);
-                    // Add new valid IDs to our list
+                    // add new valid IDs to our list
                     validatedIds.push(...newIds);
                     
                     console.log(`Found ${newIds.length} valid titles. Total so far: ${validatedIds.length}`);
@@ -135,7 +131,7 @@ router.post("/AIsearch", async (req: Request<{},{},{query: string, page: number,
 
 
 
-        // If we got at least some valid IDs, return them (up to 10)
+        // If we got at least some valid IDs, return them 
         if (validatedIds.length > 0) {
             const pageNum = Math.max(Number(page) || 1, 1);
             const limitNum = Math.min(Number(limit) || 20, 40);
@@ -150,20 +146,18 @@ router.post("/AIsearch", async (req: Request<{},{},{query: string, page: number,
                 success: true,
                 animeData: retrivedData.rows, 
                 animeCount: validatedIds.length
-                // attempts: attempts,
-                // totalFound: validatedIds.length
             });
         } else {
             return res.status(500).json({
                 success: false,
-                error: "AI found no valid anime titles in database",
-                attempts: attempts
+                message: "AI found no valid anime titles in database",
+                
             });
         }
 
     } catch (err) {
         console.log(err);
-        return res.status(500).json({success: false, animeData: null});
+        return res.status(500).json({success: false, message: "internal server error"});
     }
     
 });

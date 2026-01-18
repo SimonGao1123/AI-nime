@@ -49,3 +49,12 @@ export type AnimeDetailsProps = {
     selectedAnime: AnimeData | null, 
     setSelectedAnime: React.Dispatch<React.SetStateAction<AnimeData | null>>
 }
+
+export type SearchBarAIProps = {
+    text: string, 
+    setText: React.Dispatch<React.SetStateAction<string>>, 
+    page: number, 
+    limit: number, 
+    setAnimeData: React.Dispatch<React.SetStateAction<AnimeData[]>>, 
+    setTotalAnimeCount: React.Dispatch<React.SetStateAction<number>>
+}
