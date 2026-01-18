@@ -24,64 +24,36 @@ router.post("/search", async (req: Request<{},{},{query: string, page: number, l
     const offset = (pageNum - 1) * limitNum;
     
     try {
-        // Build dynamic WHERE clause based on filters
-        let whereClause = "(name ILIKE $1 OR english_name ILIKE $1)";
-        const params: any[] = [`%${query}%`];
-        let paramIndex = 2;
-
-        // Add genre filter if provided
-        if (genres && genres.trim()) {
-            whereClause += ` AND genres @> ARRAY (
-                SELECT trim(g)
-                FROM unnest(string_to_array($${paramIndex}, ',')) AS g
-            )`;
-            params.push(genres);
-            paramIndex++;
-        }
-
-        // Add type filter if provided
-        if (type && type.trim()) {
-            whereClause += ` AND type = $${paramIndex}`;
-            params.push(type);
-            paramIndex++;
-        }
-
-        // Add limit and offset
-        params.push(limitNum);
-        params.push(offset);
-
         const animeData = await db.query(
-            `SELECT * FROM anime_data WHERE ${whereClause} LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`,
-            params
-        );
-
-        const countParams: any[] = [`%${query}%`];
-        let countParamIndex = 2;
-        let countWhereClause = "(name ILIKE $1 OR english_name ILIKE $1)";
-
-        // Add same genre filter for count
-        if (genres && genres.trim()) {
-            countWhereClause += ` AND genres @> ARRAY (
+            `
+            SELECT * FROM anime_data 
+            WHERE (name ILIKE $1 OR english_name ILIKE $1)
+            AND genres @> ARRAY (
                 SELECT trim(g)
-                FROM unnest(string_to_array($${countParamIndex}, ',')) AS g
-            )`;
-            countParams.push(genres);
-            countParamIndex++;
-        }
-
-        // Add same type filter for count
-        if (type && type.trim()) {
-            countWhereClause += ` AND type = $${countParamIndex}`;
-            countParams.push(type);
-        }
+                FROM unnest(string_to_array($2, ',')) AS g
+            ) AND (NOT EXISTS (
+                SELECT 1 FROM anime_data WHERE type=$5 
+            ) OR type=$5) 
+            LIMIT $3
+            OFFSET $4
+            `
+            , [`%${query}%`, genres, limit, offset, type]
+        );
 
         const countResult = await db.query(
             `
             SELECT COUNT(*) 
             FROM anime_data
-            WHERE ${countWhereClause}
+            WHERE (name ILIKE $1 OR english_name ILIKE $1)
+            AND genres @> ARRAY (
+                SELECT trim(g)
+                FROM unnest(string_to_array($2, ',')) AS g
+            ) AND (NOT EXISTS (
+                SELECT 1 FROM anime_data WHERE type=$3 
+            ) OR type=$3) 
+
             `,
-            countParams
+            [`%${query}%`, genres, type]
         );
 
         const totalCount = Number(countResult.rows[0].count);
