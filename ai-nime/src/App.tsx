@@ -33,7 +33,7 @@ function App() {
             setPageNum(1);
             getAnimeData(text, 1, limitPerPage, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
 
-        }, [genreFilter, typeFilter]
+        }, [text, genreFilter, typeFilter]
     )
 
 
