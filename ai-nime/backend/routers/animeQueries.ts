@@ -23,6 +23,8 @@ router.post("/search", async (req: Request<{},{},{query: string, page: number, l
     const limitNum = Math.min(Number(limit) || 20, 40); // at most 40 on one page 
     const offset = (pageNum - 1) * limitNum;
     
+    console.log("genres", genres);
+    console.log("types", type);
     try {
         const animeData = await db.query(
             `
@@ -47,6 +49,7 @@ router.post("/search", async (req: Request<{},{},{query: string, page: number, l
             [`%${query}%`]
         );
 
+        console.log(animeData.rows);
         const totalCount = Number(countResult.rows[0].count);
         return res.status(200).json({success: true, animeData: animeData.rows, animeCount: totalCount});        
     } catch (err) {

@@ -15,5 +15,8 @@ export function getAnimeData (query: string, page: number, limit: number,
     }).catch(err => {
         console.log(err);
     })
+    console.log("genres: ", genres);
+    console.log(genres.join(","));
+    console.log("types: ", type);
 }
 
