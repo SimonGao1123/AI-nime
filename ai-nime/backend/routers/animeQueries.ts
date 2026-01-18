@@ -39,16 +39,83 @@ router.get("/search/:query/:page/:limit", async (req: Request<{query: string, pa
 router.post("/AIsearch", async (req: Request<{},{},{query: string}>, res: Response<any>) => {
     const {query} = req.body;
     try {
-        const model = genAI.getGenerativeModel({model: "gemma-3-4b-it"}); 
-        // TODO :edit prompt
-        const prompt = `${query}`;
+        // Get all anime IDs and names from the database
+        const animeList = await db.query(
+            `SELECT anime_id, name FROM anime_data ORDER BY name`
+        );
+
+        // Create array of anime objects
+        const animeDict = animeList.rows.map(anime => ({
+            id: anime.anime_id,
+            name: anime.name
+        }));
+
+        // Create a map for quick title lookup (case-insensitive)
+        const titleToIdMap = new Map(
+            animeDict.map(anime => [anime.name.toLowerCase(), anime.id])
+        );
+
+        const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
+
+        const prompt = `Based on the user's query, recommend 5 anime titles that best match the description. 
+        Use the official titles as listed on MyAnimeList.
+        Return ONLY a JSON array of the 5 titles as strings. Do not include any other text.
+        Example format: \`\`\`json["Cowboy Bebop", "Samurai Champloo", "Steins;Gate", "Death Note", "Attack on Titan"]\`\`\`
         
-        const result = await model.generateContent(prompt);
+        User query: ${query}`;
+        
+        let validatedIds: number[] = [];
+        let attempts = 0;
+        const maxAttempts = 5;
 
-        // TODO: parse then query database and return list of animes
-        const text = result.response.text();
+        // Try to get 10 valid IDs by making multiple requests
+        while (validatedIds.length < 10 && attempts < maxAttempts) {
+            attempts++;
+            
+            const result = await model.generateContent(prompt);
+            const text = result.response.text();
+            
+            // Add this line to see the AI's raw response
+            console.log(`Attempt ${attempts} - AI Response:`, text);
 
-        return res.status(201).json({test: text});
+            try {
+                // Try to parse the response
+                const cleanText = text.replace(/```json\n?|\n?```/g, '').trim();
+                const parsedTitles = JSON.parse(cleanText);
+
+                // Validate that we got an array of strings
+                if (Array.isArray(parsedTitles) && parsedTitles.every(t => typeof t === 'string')) {
+                    // Find IDs for titles that exist in our database
+                    const newIds = parsedTitles
+                        .map(title => titleToIdMap.get(title.toLowerCase()))
+                        .filter(id => id !== undefined && !validatedIds.includes(id)) as number[];
+                    
+                    // Add new valid IDs to our list
+                    validatedIds.push(...newIds);
+                    
+                    console.log(`Found ${newIds.length} valid titles. Total so far: ${validatedIds.length}`);
+                }
+
+            } catch (parseError) {
+                console.log(`Attempt ${attempts}: Could not parse AI response`, text);
+            }
+        }
+
+        // If we got at least some valid IDs, return them (up to 10)
+        if (validatedIds.length > 0) {
+            return res.status(201).json({
+                success: true,
+                ids: validatedIds.slice(0, 10), // Take up to 10
+                attempts: attempts,
+                totalFound: validatedIds.length
+            });
+        } else {
+            return res.status(500).json({
+                success: false,
+                error: "AI found no valid anime titles in database",
+                attempts: attempts
+            });
+        }
 
     } catch (err) {
         console.log(err);
