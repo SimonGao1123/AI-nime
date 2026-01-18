@@ -10,7 +10,6 @@
 }
 .AI_btn {
     display: block;
-    margin: 20px auto;
     background-color: rgb(255, 255, 255);
     outline: none;
     font-family: 'Cal Sans', sans-serif;
@@ -21,10 +20,21 @@
     cursor: pointer;
     transition: all 0.3s ease-in-out;
 }
+.btn_container {
+    display: flex;
+    gap: 30px;
+    margin: 20px;
+    justify-content: center;
+}
+.selected_btn {
+    background-color: rgb(241, 120, 250);
+    transform: scale(1.05);
+}
 
 .AI_btn:hover {
     background-color: rgb(241, 120, 250);
     box-shadow: 0 0 5px 2px rgba(123, 0, 255, 0.5);
+    transform: scale(1.05);
 }
 
 .AI_btn:active {

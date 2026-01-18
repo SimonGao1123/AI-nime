@@ -64,9 +64,13 @@ function App() {
             setTotalAnimeCount={setTotalAnimeCount}
             />
             }   
-            <button className={style.AI_btn} onClick={() => setPromptAI(!promptAI)}>
-                {!promptAI ? "AI Search" : "Normal Search"}</button>
-
+            <div className={style.btn_container}>
+                <button className={promptAI ? style.AI_btn : `${style.AI_btn} ${style.selected_btn}`} onClick={() => setPromptAI(false)}>
+                    Normal Search 🔍</button>
+                <button className={!promptAI ? style.AI_btn : `${style.AI_btn} ${style.selected_btn}`} onClick={() => setPromptAI(true)}>
+                    AI Search
+                </button>
+            </div>
             <span style={{display: 'flex', justifyContent: 'center', marginTop: '20px'}}>
             <PageBtns
             pageNum={pageNum}
