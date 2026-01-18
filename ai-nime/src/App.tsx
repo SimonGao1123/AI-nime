@@ -28,6 +28,13 @@ function App() {
             getAnimeData(text, pageNum, limitPerPage, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
         }, [limitPerPage, pageNum, genreFilter, typeFilter, text]    
     );
+    useEffect(
+        () => {
+            setPageNum(1);
+            getAnimeData(text, 1, limitPerPage, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
+
+        }, [genreFilter, typeFilter]
+    )
 
 
     return (
