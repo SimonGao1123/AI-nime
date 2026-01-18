@@ -37,7 +37,7 @@ router.post("/search", async (req: Request<{},{},{query: string, page: number, l
             LIMIT $3
             OFFSET $4
             `
-            , [`%${query}%`, genres, limit, offset, type]
+            , [`%${query}%`, genres, limitNum, offset, type]
         );
 
         const countResult = await db.query(
