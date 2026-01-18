@@ -1,0 +1,24 @@
+.PerCard{
+    margin-top: 30px;
+    color: white;
+    font-family: 'Cal Sans', sans-serif;
+}
+
+img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    
+    
+   
+}
+.PerCard:hover {
+    color: purple;
+    cursor: pointer;
+}
+
+.cardList {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}

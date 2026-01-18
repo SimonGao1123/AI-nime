@@ -1,1 +1,2 @@
-SELECT * FROM anime_data WHERE name ILIKE '%kanojo%';
+-- @block
+SELECT * FROM anime_data WHERE image_url='UNKNOWN';

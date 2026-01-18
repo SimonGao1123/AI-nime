@@ -11,8 +11,13 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const router = express.Router();
 
 
-router.get("/search/:query/:page/:limit", async (req: Request<{query: string, page: number, limit: number}>, res: Response<{success: boolean, animeData: AnimeData[] | null}>) => {
-    const {query, page, limit} = req.params;
+router.post("/search", async (req: Request<{},{},{query: string, page: number, limit: number, genres: string, type: string}>, res: Response<{success: boolean, animeData: AnimeData[] | null, animeCount: number}>) => {
+    // Genres needs to look like: "Adventure,Comedy,Fantasy"
+    
+    const {query, page, limit, genres, type} = req.body;
+    if (!page || !limit) {
+        return res.status(401).json({success: false, animeData: null, animeCount: 0});
+    }
     // normal search (title)
     const pageNum = Math.max(Number(page) || 1, 1); // min on page #1
     const limitNum = Math.min(Number(limit) || 20, 40); // at most 40 on one page 
@@ -22,17 +27,40 @@ router.get("/search/:query/:page/:limit", async (req: Request<{query: string, pa
         const animeData = await db.query(
             `
             SELECT * FROM anime_data 
-            WHERE name ILIKE $1
-            LIMIT $2
-            OFFSET $3
+            WHERE (name ILIKE $1 OR english_name ILIKE $1)
+            AND genres @> ARRAY (
+                SELECT trim(g)
+                FROM unnest(string_to_array($2, ',')) AS g
+            ) AND (NOT EXISTS (
+                SELECT 1 FROM anime_data WHERE type=$5 
+            ) OR type=$5) 
+            LIMIT $3
+            OFFSET $4
             `
-            , [`%${query}%`, limit, offset]
+            , [`%${query}%`, genres, limit, offset, type]
         );
 
-        return res.status(200).json({success: true, animeData: animeData.rows});        
+        const countResult = await db.query(
+            `
+            SELECT COUNT(*) 
+            FROM anime_data
+            WHERE (name ILIKE $1 OR english_name ILIKE $1)
+            AND genres @> ARRAY (
+                SELECT trim(g)
+                FROM unnest(string_to_array($2, ',')) AS g
+            ) AND (NOT EXISTS (
+                SELECT 1 FROM anime_data WHERE type=$3 
+            ) OR type=$3) 
+
+            `,
+            [`%${query}%`, genres, type]
+        );
+
+        const totalCount = Number(countResult.rows[0].count);
+        return res.status(200).json({success: true, animeData: animeData.rows, animeCount: totalCount});        
     } catch (err) {
         console.log(err);
-        return res.status(500).json({success: false, animeData: null});
+        return res.status(500).json({success: false, animeData: null, animeCount: 0});
     }
 });
 
