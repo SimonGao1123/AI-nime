@@ -20,7 +20,7 @@ export function getAnimeData (query: string, page: number, limit: number,
 }
 
 export function getAnimeDataAI (query: string, page: number, limit: number, 
-    setTotalAnimeCount: any, setAnimeData: any) {
+    setTotalAnimeCount: any, setAnimeData: any, setIsLoading?: any) {
     fetch("http://localhost:3000/getAnime/AIsearch", {
         method: 'POST', // Specify the method
         headers: {
@@ -35,8 +35,13 @@ export function getAnimeDataAI (query: string, page: number, limit: number,
         } else {
             console.log(parsed.message);
         }
+        if (setIsLoading) {
+            setIsLoading(false);
+        }
     }).catch(err => {
         console.log(err);
+        if (setIsLoading) {
+            setIsLoading(false);
+        }
     })
-
 }

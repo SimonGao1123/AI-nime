@@ -17,7 +17,6 @@ function SearchBarComponent({page, limit, setTotalAnimeCount, setAnimeData, genr
         setText(e.target.value)
       }}
       />
-      <button onClick={() => getAnimeData(text, page, limit, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter)}>Search</button>
     </div>
   );
 }

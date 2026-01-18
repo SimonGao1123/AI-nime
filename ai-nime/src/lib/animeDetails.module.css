@@ -93,26 +93,27 @@
 }
 
 .summary {
-  padding: 1rem;
+  padding: 1.5rem;
   background: rgba(131, 15, 255, 0.15);
   border-radius: 6px;
   border-left: 3px solid #830fff;
-  line-height: 1.6;
+  line-height: 1.8;
   color: rgb(255, 255, 255);
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   margin: 0;
   font-family: 'Cal Sans', sans-serif;
 }
 
 .right_column > p {
-  padding: 0.75rem 1rem;
+  padding: 1rem 1.5rem;
   background: rgba(131, 15, 255, 0.15);
   border-radius: 6px;
   border-left: 3px solid #830fff;
   color: rgb(255, 255, 255);
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   font-family: 'Cal Sans', sans-serif;
+  line-height: 1.8;
 }
 
 @media (max-width: 768px) {

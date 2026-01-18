@@ -51,8 +51,6 @@ function App() {
             />
             : 
             <SearchBarAI
-            text={text}
-            setText={setText}
             page={pageNum}
             limit={limitPerPage}
             setAnimeData={setAnimeData}

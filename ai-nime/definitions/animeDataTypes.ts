@@ -51,8 +51,6 @@ export type AnimeDetailsProps = {
 }
 
 export type SearchBarAIProps = {
-    text: string, 
-    setText: React.Dispatch<React.SetStateAction<string>>, 
     page: number, 
     limit: number, 
     setAnimeData: React.Dispatch<React.SetStateAction<AnimeData[]>>, 
