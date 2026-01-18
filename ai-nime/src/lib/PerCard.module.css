@@ -12,6 +12,10 @@ img {
     
    
 }
+.PerCard:hover {
+    color: purple;
+    cursor: pointer;
+}
 
 .cardList {
     display: grid;

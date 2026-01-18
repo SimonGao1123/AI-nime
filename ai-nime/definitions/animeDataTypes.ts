@@ -44,3 +44,8 @@ export type FilterGenresProps = {
     text: string
 
 }
+
+export type AnimeDetailsProps = {
+    selectedAnime: AnimeData | null, 
+    setSelectedAnime: React.Dispatch<React.SetStateAction<AnimeData | null>>
+}

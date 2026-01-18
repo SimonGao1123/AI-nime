@@ -1,5 +1,5 @@
-import type { FilterGenresProps } from "../definitions/animeDataTypes";
-import style from './lib/Filters.module.css';
+import type { FilterGenresProps } from "../../definitions/animeDataTypes";
+import style from './Filters.module.css';
 
 const allGenres = [
   "Slice of Life",

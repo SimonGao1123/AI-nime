@@ -4,8 +4,9 @@ import SearchBarComponent from './lib/Searchbar.tsx'
 import type { AnimeData } from '../definitions/animeDataTypes.ts';
 import {getAnimeData} from './lib/data/searchBarQuery.ts'
 import {LimitBtn, PageBtns} from './lib/Buttons.tsx'
-import FilterGenres from './Filters.tsx';
+import FilterGenres from './lib/Filters.tsx';
 import { FullCardList } from './lib/PerCard.tsx';
+import AnimeDetails from './lib/animeDetails.tsx';
 function App() {
     const [totalAnimeCount, setTotalAnimeCount] = useState<number>(0);
     const [animeData, setAnimeData] = useState<AnimeData[]>([]);
@@ -17,6 +18,8 @@ function App() {
     const [typeFilter, setTypeFilter] = useState<string>("");
 
     const [text, setText] = useState<string>("");
+
+    const [selectedAnime, setSelectedAnime] = useState<AnimeData | null>(null);
     useEffect(
         () => {
             getAnimeData(text, pageNum, limitPerPage, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
@@ -27,6 +30,9 @@ function App() {
     return (
         <main>
             <h1 className={style.title}>AI-nime</h1>
+            
+            { !selectedAnime ? 
+            <>
             <SearchBarComponent 
                 setTotalAnimeCount={setTotalAnimeCount}
                 setAnimeData={setAnimeData}
@@ -64,7 +70,15 @@ function App() {
         
         
             <FullCardList
-            animeData={animeData}/>
+            animeData={animeData}
+            setSelectedAnime={setSelectedAnime}
+            />
+            </>
+            : 
+            <AnimeDetails
+            selectedAnime={selectedAnime}
+            setSelectedAnime={setSelectedAnime}/>
+            }
         </main>
     
         

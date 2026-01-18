@@ -1,2 +1,2 @@
 -- @block
-SELECT COUNT(*) FROM anime_data;
+SELECT * FROM anime_data WHERE image_url='UNKNOWN';
