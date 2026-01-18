@@ -2,7 +2,7 @@
     background-color: rgb(255, 255, 255);
     outline: none;
     font-family: 'Cal Sans', sans-serif;
-    border-radius: 15px;;
+    
     font-size: 18px;
     padding: 8px 15px;
     border: 2px solid #830fff;
@@ -13,4 +13,32 @@
 
 .limitSelect{
     border: 2px solid #830fff;
+}
+
+.manualPageInput {
+    background-color: rgb(255, 255, 255);
+    outline: none;
+    font-family: 'Cal Sans', sans-serif;
+    font-size: 18px;
+    padding: 8px 15px;
+    border: 2px solid #830fff;
+    width: 60px;
+    text-align: center;
+    margin-right: 9px;
+    margin-left: 8px;
+}
+
+.manualPageButton {
+    background-color: rgb(255, 255, 255);
+    outline: none;
+    font-family: 'Cal Sans', sans-serif;
+    font-size: 18px;
+    padding: 8px 15px;
+    border: 2px solid #830fff;
+    cursor: pointer;
+    margin-right: 9px;
+}
+
+.manualPageButton:hover {
+    background-color: rgb(241, 120, 250);
 }

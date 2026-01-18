@@ -117,9 +117,9 @@ function ManualPageInput ({pageNum, setPageNum, totalNumberPages, setManual} :
                 max={totalNumberPages}
                 value={inputValue}
                 onChange={handleInputChange}
-                style={{ width: '60px' }}
+                className={style.manualPageInput}
             />
-            <button type="submit">Go</button>
+            <button type="submit" className={style.manualPageButton}>Go</button>
         </form>
     );
 }

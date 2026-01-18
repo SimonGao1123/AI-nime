@@ -1,0 +1,52 @@
+.filterContainer {
+    display: flex;
+    gap: 40px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.filterSection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filterSection h3 {
+    font-family: 'Cal Sans', sans-serif;
+    color: white;
+    margin: 0 0 10px 0;
+    font-size: 18px;
+}
+
+.filterGroup {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filterItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filterItem input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #830fff;
+}
+
+.filterItem label {
+    font-family: 'Cal Sans', sans-serif;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filterItem input[type="checkbox"]:hover {
+    opacity: 0.8;
+}

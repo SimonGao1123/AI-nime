@@ -20,12 +20,13 @@ function App() {
     useEffect(
         () => {
             getAnimeData(text, pageNum, limitPerPage, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
-        }, [limitPerPage, pageNum]    
+        }, [limitPerPage, pageNum, genreFilter, typeFilter, text]    
     );
 
-    console.log(animeData);
+
     return (
         <main>
+            <h1 className={style.title}>AI-nime</h1>
             <SearchBarComponent 
                 setTotalAnimeCount={setTotalAnimeCount}
                 setAnimeData={setAnimeData}

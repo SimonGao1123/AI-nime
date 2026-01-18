@@ -1,7 +1,5 @@
-import { useEffect, useState } from 'react'
 import type { FilterGenresProps } from "../definitions/animeDataTypes";
 import style from './lib/Filters.module.css';
-import { getAnimeData } from './lib/data/searchBarQuery';
 
 const allGenres = [
   "Slice of Life",
@@ -31,7 +29,6 @@ const allTypes = [
   "TV",
   "Special",
   "ONA",
-  "UNKNOWN",
   "Music",
   "Movie",
   "OVA"
@@ -42,8 +39,7 @@ export default function FilterGenres ({setTotalAnimeCount, setAnimeData, page, l
 
     for (let i = 0; i < allGenres.length; i++) {
         filterBtns.push(
-            <div key={`genre-filter-${i}`}>
-                <label htmlFor={`filter-btns-${i}`}>{allGenres[i]}</label>
+            <div key={`genre-filter-${i}`} className={style.filterItem}>
                 <input id={`filter-btns-${i}`} 
                 name="genres-filter" 
                 value={allGenres[i]} 
@@ -59,14 +55,14 @@ export default function FilterGenres ({setTotalAnimeCount, setAnimeData, page, l
                 }}
                 type="checkbox"
                 />
+                <label htmlFor={`filter-btns-${i}`}>{allGenres[i]}</label>
             </div>
         );
     }
     const typeBtns = [];
     for (let i = 0; i < allTypes.length; i++) {
         typeBtns.push(
-            <div key={`type-filter-${i}`}>
-                <label htmlFor={`filter-type-btns-${i}`}>{allTypes[i]}</label>
+            <div key={`type-filter-${i}`} className={style.filterItem}>
                 <input id={`filter-type-btns-${i}`} 
                 name="types-filter" 
                 value={allTypes[i]} 
@@ -78,29 +74,28 @@ export default function FilterGenres ({setTotalAnimeCount, setAnimeData, page, l
                         setTypeFilter(allTypes[i]);
                     }
                 }}
-                type="radio"
+                type="checkbox"
                 />
-
+                <label htmlFor={`filter-type-btns-${i}`}>{allTypes[i]}</label>
             </div>
         );
     }
 
     return (
-        <>
-            <div>
+        <div className={style.filterContainer}>
+            <div className={style.filterSection}>
                 <h3>Filter Genres</h3>
-                {filterBtns}
+                <div className={style.filterGroup}>
+                    {filterBtns}
+                </div>
             </div>
 
-            <div>
-                <h3>FIlter Types</h3>
-                {typeBtns}
+            <div className={style.filterSection}>
+                <h3>Filter Types</h3>
+                <div className={style.filterGroup}>
+                    {typeBtns}
+                </div>
             </div>
-
-            <button onClick={() => {
-                getAnimeData(text, page, limit, setTotalAnimeCount, setAnimeData, genreFilter, typeFilter);
-            }}>Apply Filter</button>
-        </>
+        </div>
     );
-
 }
