@@ -7,6 +7,10 @@
     padding: 8px 15px;
     border: 2px solid #830fff;
 }
+.pageBtn:hover {
+    background-color: rgb(236, 143, 243);
+    transition: transform 0.5s ease-in-out; 
+}
 .activeBtn {
     background-color: rgb(241, 120, 250);
 }
