@@ -36,8 +36,8 @@ router.get("/search/:query/:page/:limit", async (req: Request<{query: string, pa
     }
 });
 
-router.post("/AIsearch", async (req: Request<{},{},{query: string}>, res: Response<any>) => {
-    const {query} = req.body;
+router.post("/AIsearch", async (req: Request<{},{},{query: string, page: number, limit: number}>, res: Response<any>) => {
+    const {query, page, limit} = req.body;
     try {
         // Get all anime IDs and names from the database
         const animeList = await db.query(
@@ -45,17 +45,14 @@ router.post("/AIsearch", async (req: Request<{},{},{query: string}>, res: Respon
         );
 
         // Create array of anime objects
-        const animeDict = animeList.rows.map(anime => ({
-            id: anime.anime_id,
-            name: anime.name
-        }));
+        const animeDict = animeList.rows;
 
         // Create a map for quick title lookup (case-insensitive)
         const titleToIdMap = new Map(
-            animeDict.map(anime => [anime.name.toLowerCase(), anime.id])
+            animeDict.map(anime => [anime.name.toLowerCase(), anime.anime_id])
         );
 
-        const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
+        const model = genAI.getGenerativeModel({model: "gemini-2.5-flash"});
 
         const prompt = `Based on the user's query, recommend 5 anime titles that best match the description. 
         Use the official titles as listed on MyAnimeList.
@@ -90,24 +87,43 @@ router.post("/AIsearch", async (req: Request<{},{},{query: string}>, res: Respon
                         .map(title => titleToIdMap.get(title.toLowerCase()))
                         .filter(id => id !== undefined && !validatedIds.includes(id)) as number[];
                     
+                    const matchedTitles = parsedTitles.filter(title => 
+                    titleToIdMap.has(title.toLowerCase()) && 
+                    !validatedIds.includes(titleToIdMap.get(title.toLowerCase())!)
+                    );
+                    console.log(`Matched titles:`, matchedTitles);
                     // Add new valid IDs to our list
                     validatedIds.push(...newIds);
                     
                     console.log(`Found ${newIds.length} valid titles. Total so far: ${validatedIds.length}`);
                 }
 
+                
+
             } catch (parseError) {
                 console.log(`Attempt ${attempts}: Could not parse AI response`, text);
             }
         }
 
+
+
         // If we got at least some valid IDs, return them (up to 10)
         if (validatedIds.length > 0) {
+            const pageNum = Math.max(Number(page) || 1, 1);
+            const limitNum = Math.min(Number(limit) || 20, 40);
+            const offset = (pageNum-1)*limitNum;
+            const retrivedData = await db.query(
+                `SELECT * FROM anime_data WHERE anime_id=ANY($1::int[])
+                 LIMIT $2 OFFSET $3`,
+                [validatedIds, limitNum, offset]
+            );
+            
             return res.status(201).json({
                 success: true,
-                ids: validatedIds.slice(0, 10), // Take up to 10
-                attempts: attempts,
-                totalFound: validatedIds.length
+                animeData: retrivedData.rows, 
+                animeCount: validatedIds.length
+                // attempts: attempts,
+                // totalFound: validatedIds.length
             });
         } else {
             return res.status(500).json({
